@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="LibraryOnline/LibraryOnline.csproj" />
+  <Project Path="LibraryOnline.Core/LibraryOnline.Core.csproj" />
+  <Project Path="LibraryOnline.Infrastructure/LibraryOnline.Infrastructure.csproj" />
+  <Project Path="LibraryOnline.Tests/LibraryOnline.Tests.csproj" />
+  <Project Path="LibraryOnline/LibraryOnline.API.csproj" />
 </Solution>
