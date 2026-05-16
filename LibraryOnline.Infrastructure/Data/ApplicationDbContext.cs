@@ -28,21 +28,27 @@ namespace LibraryOnline.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Author>()
-                .Property(c => c.FirstName)
-                .IsRequired();
-            modelBuilder.Entity<Author>()
-                .Property(c => c.LastName)
-                .IsRequired();
-            modelBuilder.Entity<Author>()
-                .Property(c => c.Bio)
-                .HasMaxLength(300);
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                typeof(ApplicationDbContext).Assembly);
+        }
 
-            modelBuilder.Entity<Author>()
-                .HasMany<Book>(c => c.Books)
-                .WithOne(o => o.Author)
-                .HasForeignKey(c => c.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
