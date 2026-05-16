@@ -27,6 +27,7 @@ namespace LibraryOnline.Infrastructure.Data.Configuration
                 .IsRequired();
 
             builder.Property(e => e.Priority)
+                .HasConversion<string>()
                 .HasDefaultValue(NotePriority.Low)
                 .IsRequired();
 

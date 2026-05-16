@@ -28,6 +28,7 @@ namespace LibraryOnline.Infrastructure.Data.Configuration
                 .IsRequired();
 
             builder.Property(e => e.Status)
+                .HasConversion<string>()
                 .HasDefaultValue(ReservationStatus.Active)
                 .IsRequired();
         }

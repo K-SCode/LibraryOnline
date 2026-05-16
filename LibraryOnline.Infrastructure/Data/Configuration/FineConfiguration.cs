@@ -27,8 +27,6 @@ namespace LibraryOnline.Infrastructure.Data.Configuration
             builder.Property(e => e.Reason)
                 .HasMaxLength(500)
                 .IsRequired();
-            
-            builder.Property(e => e.Iss)
         }
     }
 }

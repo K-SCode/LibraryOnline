@@ -4,9 +4,10 @@ using System.Text;
 
 namespace LibraryOnline.Core.Enums
 {
-    public enum RoleNamecs
+    public enum RoleName
     {
         Employee,
-        User
+        User,
+        Admin
     }
 }
