@@ -14,4 +14,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LibraryOnline.Core\LibraryOnline.Core.csproj" />
+    <ProjectReference Include="..\LibraryOnline.Infrastructure\LibraryOnline.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
