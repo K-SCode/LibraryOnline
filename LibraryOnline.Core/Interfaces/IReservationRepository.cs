@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibraryOnline.Core.Interfaces
 {
-    public interface IReservationRepository : IBaseRepository<Reservation>
+    public interface IReservationRepository : IRepository<Reservation>
     {
     }
 }

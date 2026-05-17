@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibraryOnline.Core.Interfaces
 {
-    public interface IUserRepository : IBaseRepository<User>
+    public interface IUserRepository : IRepository<User>
     {
     }
 }

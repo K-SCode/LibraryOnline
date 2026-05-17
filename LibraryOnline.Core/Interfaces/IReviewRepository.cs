@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibraryOnline.Core.Interfaces
 {
-    public interface IReviewRepository : IBaseRepository<Review>
+    public interface IReviewRepository : IRepository<Review>
     {
     }
 }

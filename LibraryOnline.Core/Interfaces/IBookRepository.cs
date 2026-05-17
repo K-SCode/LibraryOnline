@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibraryOnline.Core.Interfaces
 {
-    public interface IBookRepository : IBaseRepository<Book>
+    public interface IBookRepository : IRepository<Book>
     {
     }
 }

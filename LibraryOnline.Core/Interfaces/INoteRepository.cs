@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibraryOnline.Core.Interfaces
 {
-    public interface INoteRepository : IBaseRepository<Note>
+    public interface INoteRepository : IRepository<Note>
     {
     }
 }
