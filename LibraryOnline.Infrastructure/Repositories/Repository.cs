@@ -2,9 +2,6 @@
 using LibraryOnline.Core.Interfaces;
 using LibraryOnline.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LibraryOnline.Infrastructure.Repositories
 {

@@ -1,39 +1,40 @@
 ﻿using LibraryOnline.Core.Entities;
 using LibraryOnline.Core.Interfaces;
 using LibraryOnline.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LibraryOnline.Infrastructure.Repositories
 {
     public class UnitOfWorks(
-        ApplicationDbContext context) 
+        ApplicationDbContext context)  : IUnitOfWorks
     {
-        private IRepository<Author> _authors;
-        private IRepository<Category> _categories;
-        private IRepository<Role> _roles;
-        private IRepository<Fine> _fines;
+        private IRepository<Author>? _authors;
+        private IRepository<Category>? _categories;
+        private IRepository<Role>? _roles;
+        private IRepository<Fine>? _fines;
 
-        public IRepository<Author> Auhors => _authors ??= new Repository<Author>(context);
-        public IRepository<Category>
-        public IRepository<Role>
-        public IRepository<Fine> 
+        private IBookRepository? _books;
+        private IUserRepository? _users;
+        private INoteRepository? _notes;
+        private IReservationRepository? _reservations;
+        private IReviewRepository? _reviews;
 
+        public IRepository<Author> Authors =>
+            _authors ??= new Repository<Author>(context);
+        public IRepository<Category> Categories =>
+            _categories ??= new Repository<Category>(context);
+        public IRepository<Role> Roles => 
+            _roles ??= new Repository<Role>(context);
+        public IRepository<Fine> Fines =>
+            _fines ??= new Repository<Fine>(context);
 
-        public IBookRepository Book => _author ??= new BookRepository();
-        public IUserRepository User => new UserRepository();
-        public INoteRepository Note => new NoteRepository();
-        public IReservationRepository Reservation => new ReservationRepository();
-        public IReviewRepository review => new ReviewRepository();
-        public void Dispose()
-        {
-            context.Dispose();
-        }
-        public int SaveChanges()
-        {
-            throw new NotImplementedException();
-        }
+        public IBookRepository Books => _books ??= new BookRepository();
+        public IUserRepository Users => _users ??= new UserRepository();
+        public INoteRepository Notes => _notes ??= new NoteRepository();
+        public IReservationRepository Reservations =>
+            _reservations ??= new ReservationRepository();
+        public IReviewRepository Reviews =>
+            _reviews ??= new ReviewRepository();
+
         public async Task<int> SaveChangesAsync() =>
             await context.SaveChangesAsync();
     }

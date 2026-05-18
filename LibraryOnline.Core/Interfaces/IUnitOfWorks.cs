@@ -1,11 +1,8 @@
 ﻿using LibraryOnline.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LibraryOnline.Core.Interfaces
 {
-    public interface IUnitOfWorks : IDisposable
+    public interface IUnitOfWorks
     {
         IBookRepository Books { get;}
         IUserRepository Users { get;}
