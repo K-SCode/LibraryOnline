@@ -1,4 +1,7 @@
+using LibraryOnline.Core.Interfaces.Repository;
 using LibraryOnline.Infrastructure.Data;
+using LibraryOnline.Infrastructure.Repositories;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddMapster();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -17,6 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddScoped<IUnitOfWorks, UnitOfWorks>();
 
 var app = builder.Build();
 

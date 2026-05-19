@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LibraryOnline.Core.Interfaces
+namespace LibraryOnline.Core.Interfaces.Repository
 {
-    public interface IReviewRepository : IRepository<Review>
+    public interface IReservationRepository : IRepository<Reservation>
     {
     }
 }

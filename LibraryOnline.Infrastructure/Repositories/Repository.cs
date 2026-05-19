@@ -1,5 +1,5 @@
 ﻿using LibraryOnline.Core.Entities;
-using LibraryOnline.Core.Interfaces;
+using LibraryOnline.Core.Interfaces.Repository;
 using LibraryOnline.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

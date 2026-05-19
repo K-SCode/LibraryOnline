@@ -1,6 +1,6 @@
 ﻿using LibraryOnline.Core.Entities;
 
-namespace LibraryOnline.Core.Interfaces
+namespace LibraryOnline.Core.Interfaces.Repository
 {
     public interface IUnitOfWorks
     {

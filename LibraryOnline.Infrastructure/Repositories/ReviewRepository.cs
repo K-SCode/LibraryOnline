@@ -1,4 +1,4 @@
-﻿using LibraryOnline.Core.Interfaces;
+﻿using LibraryOnline.Core.Interfaces.Repository;
 
 namespace LibraryOnline.Infrastructure.Repositories
 {
