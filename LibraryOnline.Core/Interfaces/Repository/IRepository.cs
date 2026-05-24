@@ -10,7 +10,7 @@ namespace LibraryOnline.Core.Interfaces.Repository
         Task AddAsync(T entity);
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetByIdAsync(Guid id);
-        void Delete(T entity);
+        void Delete(Guid id);
         Task<bool> ExistsAsync(Guid id);
         void Update(T entity);
     }

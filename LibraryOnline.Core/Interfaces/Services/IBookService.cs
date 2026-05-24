@@ -7,7 +7,7 @@ namespace LibraryOnline.Core.Interfaces.Services
     {
         public Task<BookResponseDto?> GetBookById(Guid id);
 
-        public Task<PagedResultDto<IEnumerable<BookResponseDto>>?> GetAllBook();
+        public Task<PagedResultDto<IEnumerable<BookResponseDto>>?> GetAllBook(BookQueryDto queryDto);
         public Task<BookResponseDto> GetBookByTitle(string title);
 
         public Task<PagedResultDto<BookResponseDto>> GetAllBooksByAuthorId(Guid authorId);

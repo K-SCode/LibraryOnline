@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibraryOnline.Core.Common
+﻿namespace LibraryOnline.Core.Common
 {
     public class BookQuery
     {

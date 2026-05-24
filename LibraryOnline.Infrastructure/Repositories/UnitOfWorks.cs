@@ -27,7 +27,7 @@ namespace LibraryOnline.Infrastructure.Repositories
         public IRepository<Fine> Fines =>
             _fines ??= new Repository<Fine>(context);
 
-        public IBookRepository Books => _books ??= new BookRepository();
+        public IBookRepository Books => _books ??= new BookRepository(context);
         public IUserRepository Users => _users ??= new UserRepository();
         public INoteRepository Notes => _notes ??= new NoteRepository();
         public IReservationRepository Reservations =>
@@ -37,5 +37,7 @@ namespace LibraryOnline.Infrastructure.Repositories
 
         public async Task<int> SaveChangesAsync() =>
             await context.SaveChangesAsync();
+        public int SaveChanges() =>
+            context.SaveChanges();
     }
 }

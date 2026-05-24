@@ -1,4 +1,5 @@
-﻿using LibraryOnline.Core.DTOs.Books;
+﻿using LibraryOnline.Core.Common;
+using LibraryOnline.Core.DTOs.Books;
 using LibraryOnline.Core.Entities;
 using LibraryOnline.Core.Interfaces.Repository;
 using LibraryOnline.Infrastructure.Data;
@@ -16,9 +17,9 @@ namespace LibraryOnline.Infrastructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public void Delete(Book entity)
+        public void Delete(Guid id)
         {
-            _dbSet.Remove(entity);
+            _dbSet.Where(tmp => tmp.Id == id).ExecuteDelete();
         }
 
         public async Task<bool> ExistsAsync(Guid id)
@@ -31,7 +32,7 @@ namespace LibraryOnline.Infrastructure.Repositories
             return await _dbSet.ToListAsync();
         }
 
-        public Task<IEnumerable<Book>> GetAllAsync(BookQueryDto query)
+        public async Task<IEnumerable<Book>> GetAllAsync(BookQuery query)
         {
             var bookQuery = _dbSet
                 .Include(b => b.Author)
@@ -40,12 +41,12 @@ namespace LibraryOnline.Infrastructure.Repositories
 
             if(query.CategoryId is not null)
             {
-                bookQuery.Where(b => b.CategoryId == query.CategoryId);
+                bookQuery = bookQuery.Where(b => b.CategoryId == query.CategoryId);
             }
             if(query.AuthorId is not null){
-                bookQuery.Where(b => b.AuthorId == query.AuthorId);
+                bookQuery = bookQuery.Where(b => b.AuthorId == query.AuthorId);
             }
-            if (string.IsNullOrEmpty(query.Search))
+            if (!string.IsNullOrEmpty(query.Search))
             {
                 bookQuery = bookQuery.Where(
                     b => b.ISBN.Contains(query.Search) ||
@@ -57,22 +58,30 @@ namespace LibraryOnline.Infrastructure.Repositories
                 "title" => bookQuery.OrderBy(b => b.Title),
                 "category" => bookQuery.OrderBy(b => b.Category.Name),
                 "publishedDate" => bookQuery.OrderBy(b => b.PublishedDate),
-                _ => bookQuery.OrderBy(b => b.Id)
+                _ => bookQuery.OrderBy(b => b.CreatedAt)
             };
 
             var totalCount = bookQuery.Count();
 
-            
+            var TotalPage = totalCount / query.PageSize;
+
+            var books = await bookQuery
+                .Skip((query.Page - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync();
+
+            return books;
         }
 
-        public Task<Book?> GetByIdAsync(Guid id)
+        public async Task<Book?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var book = await _dbSet.FindAsync(id);
+            return book;
         }
 
         public void Update(Book entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
         }
     }
 }
