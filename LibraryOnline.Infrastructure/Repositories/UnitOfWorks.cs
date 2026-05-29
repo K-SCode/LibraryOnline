@@ -37,7 +37,5 @@ namespace LibraryOnline.Infrastructure.Repositories
 
         public async Task<int> SaveChangesAsync() =>
             await context.SaveChangesAsync();
-        public int SaveChanges() =>
-            context.SaveChanges();
     }
 }

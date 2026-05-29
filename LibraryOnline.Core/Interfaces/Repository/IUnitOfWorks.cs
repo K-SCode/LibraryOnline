@@ -15,6 +15,5 @@ namespace LibraryOnline.Core.Interfaces.Repository
         IRepository<Role> Roles { get; }
         IRepository<Fine> Fines { get; }
         Task<int> SaveChangesAsync();
-        int SaveChanges();
     }
 }

@@ -19,14 +19,11 @@ namespace LibraryOnline.Infrastructure.Repositories
         public async Task AddAsync(T entity) =>
             await _dbSet.AddAsync(entity);
 
-        public async void Delete(Guid id) =>
-            _dbSet.Where(tmp => tmp.Id == id).ExecuteDelete();
+        public void Delete(T entity) =>
+            _dbSet.Remove(entity);
 
-        public async Task<bool> ExistsAsync(Guid id)
-        {
-            var entity = await _dbSet.FindAsync(id);
-            return entity is not null;
-        }
+        public async Task<bool> ExistsAsync(Guid id) =>
+            await _dbSet.AnyAsync(tmp => tmp.Id == id);
         public async Task<IEnumerable<T>> GetAllAsync() =>
             await _dbSet.ToListAsync();
 

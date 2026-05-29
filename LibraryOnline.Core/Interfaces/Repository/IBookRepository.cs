@@ -5,7 +5,6 @@ namespace LibraryOnline.Core.Interfaces.Repository
 {
     public interface IBookRepository : IRepository<Book>
     {
-        Task<IEnumerable<Book>> GetAllAsync(BookQuery query);
-        
+        Task<(IEnumerable<Book>,int totalCount)> GetAllAsync(BookQuery query);
     }
 }
