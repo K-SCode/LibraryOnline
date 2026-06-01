@@ -8,10 +8,10 @@ namespace LibraryOnline.Core.Interfaces.Repository
     public interface IRepository<T> where T : BaseEntity
     {
         Task AddAsync(T entity);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<(IEnumerable<T>, int)> GetAllAsync(int pageNumber, int PageSize);
         Task<T?> GetByIdAsync(Guid id);
-        Task Delete(T entity);
+        void Delete(T entity);
         Task<bool> ExistsAsync(Guid id);
-        Task Update(T entity);
+        void Update(T entity);
     }
 }

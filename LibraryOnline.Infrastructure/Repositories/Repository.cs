@@ -2,6 +2,7 @@
 using LibraryOnline.Core.Interfaces.Repository;
 using LibraryOnline.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LibraryOnline.Infrastructure.Repositories
 {
@@ -24,8 +25,19 @@ namespace LibraryOnline.Infrastructure.Repositories
 
         public async Task<bool> ExistsAsync(Guid id) =>
             await _dbSet.AnyAsync(tmp => tmp.Id == id);
-        public async Task<IEnumerable<T>> GetAllAsync() =>
-            await _dbSet.ToListAsync();
+        public async Task<(IEnumerable<T>,int)> GetAllAsync(int pageNumber, int pageSize)
+        {
+            var bookQuery = _dbSet.AsQueryable();
+
+            var totalCount = await bookQuery.CountAsync();
+            
+            var books = await bookQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (books, totalCount);
+        }
 
         public async Task<T?> GetByIdAsync(Guid id) =>
             await _dbSet.FindAsync(id);
