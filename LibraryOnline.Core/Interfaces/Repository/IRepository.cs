@@ -11,7 +11,7 @@ namespace LibraryOnline.Core.Interfaces.Repository
         Task<(IEnumerable<T>, int)> GetAllAsync(int pageNumber, int PageSize);
         Task<T?> GetByIdAsync(Guid id);
         void Delete(T entity);
-        Task<bool> ExistsAsync(Guid id);
+        Task<bool> ExistsAsync(IDictionary<string,string> elements);
         void Update(T entity);
     }
 }

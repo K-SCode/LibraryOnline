@@ -2,7 +2,8 @@
 using LibraryOnline.Core.Interfaces.Repository;
 using LibraryOnline.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace LibraryOnline.Infrastructure.Repositories
 {
@@ -23,8 +24,31 @@ namespace LibraryOnline.Infrastructure.Repositories
         public void Delete(T entity) =>
             _dbSet.Remove(entity);
 
-        public async Task<bool> ExistsAsync(Guid id) =>
-            await _dbSet.AnyAsync(tmp => tmp.Id == id);
+        public async Task<bool> ExistsAsync(IDictionary<string,string> elements)
+        {
+            ArgumentNullException.ThrowIfNull(elements);
+
+            var parameter = Expression.Parameter(typeof(T), "tmp");
+            Expression? combined = null;
+
+            foreach(var item in elements)
+            {
+                var property = typeof(T).GetProperty(item.Key) 
+                    ?? throw new ArgumentNullException($"{item.Key} not exitsts");
+
+                var memberAccess = Expression.Property(parameter, property);
+
+                var convertedValue = Convert.ChangeType(item.Value, property.GetType());
+                var constat = Expression.Constant(convertedValue,property.GetType());
+
+                var equality = Expression.Equal(memberAccess, constat);
+
+                combined = combined == null ? equality : Expression.AndAlso(combined, equality);
+            }
+
+            var lambda = Expression.Lambda<Func<T,bool>>(combined!,parameter);
+            return await _dbSet.AnyAsync(lambda);
+         }
         public async Task<(IEnumerable<T>,int)> GetAllAsync(int pageNumber, int pageSize)
         {
             var bookQuery = _dbSet.AsQueryable();
