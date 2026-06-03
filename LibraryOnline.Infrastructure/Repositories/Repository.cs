@@ -58,7 +58,7 @@ namespace LibraryOnline.Infrastructure.Repositories
             var books = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(); 
 
             return (books, totalCount);
         }

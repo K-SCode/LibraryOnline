@@ -15,10 +15,22 @@ namespace LibraryOnline.API.Services
     {
         public async Task CreateBookAsync(CreateBookDto createBook)
         {
-            ArgumentNullException.ThrowIfNull(createBook);
+            Dictionary<string, string> bookCheck = new()
+            {
+                { nameof(Book.ISBN), createBook.ISBN},
+            };
+            var bookExists = await unitOfWorks.Books.ExistsAsync(bookCheck);
+
+            var category = await unitOfWorks.Categories.GetByIdAsync(createBook.CategoryId);
+            var author = await unitOfWorks.Authors.GetByIdAsync(createBook.AuthorId);
+
+            if(bookExists || category is null || author is null)
+            {
+                return;
+            }
 
             var book = mapper.Map<Book>(createBook);
-
+            
             await unitOfWorks.Books.AddAsync(book);
             await unitOfWorks.SaveChangesAsync();
         }
@@ -35,11 +47,9 @@ namespace LibraryOnline.API.Services
 
         public async Task UpdateBookAsync(Guid id, UpdateBookDto updateBook)
         {
-            var book = await unitOfWorks.Books.GetByIdAsync(id);
-            ArgumentNullException.ThrowIfNull(book);
+            var book = await unitOfWorks.Books.GetByIdAsync(id) ??
+                throw new ArgumentException($"Book id: {id} not exists");
             
-            ArgumentNullException.ThrowIfNull(updateBook);
-
             mapper.Map(updateBook, book);
             
             unitOfWorks.Books.Update(book);
@@ -48,14 +58,13 @@ namespace LibraryOnline.API.Services
         }
         public async Task<PagedResultDto<BookResponseDto>?> GetAllBookAsync(BookQueryDto queryDto)
         {
-            ArgumentNullException.ThrowIfNull(queryDto);
 
             var query = mapper.Map<BookQuery>(queryDto);
-            var (books, totalCount) = await unitOfWorks.Books.GetAllAsync(query);
+            (IEnumerable<Book> items, int totalCount) = await unitOfWorks.Books.GetAllAsync(query);
 
             return new PagedResultDto<BookResponseDto>()
             {
-                Items = books.Adapt<IEnumerable<BookResponseDto>>(),
+                Items = items.Adapt<IEnumerable<BookResponseDto>>(),
                 TotalCount = totalCount,
                 Page = queryDto.Page,
                 PageSize = queryDto.PageSize
@@ -63,12 +72,9 @@ namespace LibraryOnline.API.Services
         }
         public async Task<BookResponseDto?> GetBookByIdAsync(Guid id)
         {
-            var book = await unitOfWorks.Books.GetByIdAsync(id);
+            var book = await unitOfWorks.Books.GetByIdAsync(id) ??
+                throw new ArgumentException($"Book id: {id} not exists");
 
-            if (book is null)
-            {
-                return null;
-            }
             var response = mapper.Map<BookResponseDto>(book);
             return response;
         }
