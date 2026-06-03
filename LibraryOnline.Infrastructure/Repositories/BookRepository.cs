@@ -8,31 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace LibraryOnline.Infrastructure.Repositories
 {
     internal class BookRepository(
-        ApplicationDbContext dbContext) : IBookRepository
+        ApplicationDbContext dbContext) : Repository<Book>(dbContext) ,IBookRepository
     {
-        private readonly DbSet<Book> _dbSet = dbContext.Set<Book>();
-
-        public async Task AddAsync(Book entity)
-        {
-            await _dbSet.AddAsync(entity);
-        }
-
-        public void Delete(Book entity)
-        {
-            _dbSet.Remove(entity);
-        }
-
-        public async Task<bool> ExistsAsync(Guid id)
-        {
-            return await _dbSet.AnyAsync(tmp => tmp.Id == id);
-        }
-
-        public async Task<IEnumerable<Book>> GetAllAsync()
-        {
-            return await _dbSet.ToListAsync();
-        }
-
-        public async Task<(IEnumerable<Book>, int totalCount)> GetAllAsync(BookQuery query)
+    public async Task<(IEnumerable<Book>, int totalCount)> GetAllAsync(BookQuery query)
         {
             var bookQuery = _dbSet
                 .Include(b => b.Author)
@@ -69,17 +47,6 @@ namespace LibraryOnline.Infrastructure.Repositories
                 .ToListAsync();
 
             return (books, totalCount);
-        }
-
-        public async Task<Book?> GetByIdAsync(Guid id)
-        {
-            var book = await _dbSet.FindAsync(id);
-            return book;
-        }
-
-        public void Update(Book entity)
-        {
-            _dbSet.Update(entity);
         }
     }
 }

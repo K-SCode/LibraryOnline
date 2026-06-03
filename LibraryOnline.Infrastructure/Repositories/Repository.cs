@@ -51,11 +51,11 @@ namespace LibraryOnline.Infrastructure.Repositories
          }
         public async Task<(IEnumerable<T>,int)> GetAllAsync(int pageNumber, int pageSize)
         {
-            var bookQuery = _dbSet.AsQueryable();
+            var query = _dbSet.AsQueryable();
 
-            var totalCount = await bookQuery.CountAsync();
+            var totalCount = await query.CountAsync();
             
-            var books = await bookQuery
+            var books = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
