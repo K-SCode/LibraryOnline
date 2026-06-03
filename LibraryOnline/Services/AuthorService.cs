@@ -22,19 +22,22 @@ namespace LibraryOnline.API.Services
                 { nameof(Author.LastName), createAuthor.LastName  }
             };
 
-            var isExists = unitOfWorks.Authors.ExistsAsync(checkElements);
+            var isExists = await unitOfWorks.Authors.ExistsAsync(checkElements);
 
-            var author = mapper.Map<Author>(createAuthor);
+            if (!isExists)
+            {
+                var author = mapper.Map<Author>(createAuthor);
             
-            await unitOfWorks.Authors.AddAsync(author);
-            await unitOfWorks.SaveChangesAsync();
+                await unitOfWorks.Authors.AddAsync(author);
+                await unitOfWorks.SaveChangesAsync();
+            }
+
         }
 
         public async Task DeleteAuthorAsync(Guid id)
         {
-            var authorToDelete = await unitOfWorks.Authors.GetByIdAsync(id);
-
-            ArgumentNullException.ThrowIfNull(authorToDelete);
+            var authorToDelete = await unitOfWorks.Authors.GetByIdAsync(id) ??
+                throw new ArgumentNullException($"Author with {id} not exists");
 
             unitOfWorks.Authors.Delete(authorToDelete);
             await unitOfWorks.SaveChangesAsync();
@@ -42,7 +45,7 @@ namespace LibraryOnline.API.Services
 
         public async Task<PagedResultDto<AuthorResponseDto>?> GetAllAuthorsAsync(int pageNumber, int pageSize)
         {
-            var (items,totalCount) = await unitOfWorks.Authors.GetAllAsync(pageNumber, pageSize);
+            (IEnumerable<Author >items, int totalCount) = await unitOfWorks.Authors.GetAllAsync(pageNumber, pageSize);
 
             return new PagedResultDto<AuthorResponseDto>
             {
@@ -55,11 +58,6 @@ namespace LibraryOnline.API.Services
 
         public async Task<AuthorResponseDto?> GetAuthorByIdAsync(Guid id)
         {
-            if(id == Guid.Empty)
-            {
-                throw new ArgumentException("Id is empty");
-            }
-
             var author = await unitOfWorks.Authors.GetByIdAsync(id);
             if(author is null)
             {
@@ -73,16 +71,13 @@ namespace LibraryOnline.API.Services
 
         public async Task UpdateAuthorAsync(Guid id, UpdateAuthorDto updateAuthor)
         {
-            if (id == Guid.Empty)
-                throw new ArgumentException();
             var author = await unitOfWorks.Authors.GetByIdAsync(id);
 
             ArgumentNullException.ThrowIfNull(author);
-            ArgumentNullException.ThrowIfNull(updateAuthor);
 
             mapper.Map(updateAuthor,author);
 
-            unitOfWorks.Authors.Update(author);
+            unitOfWorks.Authors.Update(author); 
             await unitOfWorks.SaveChangesAsync();
         }
     }
